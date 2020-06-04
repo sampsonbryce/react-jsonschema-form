@@ -168,9 +168,6 @@ function computeDefaults(
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
     defaults = mergeObjects(defaults, schema.default);
-  } else if ("default" in schema) {
-    // Use schema defaults for this node.
-    defaults = schema.default;
   } else if ("$ref" in schema) {
     // Use referenced schema defaults for this node.
     const refSchema = findSchemaDefinition(schema.$ref, rootSchema);
@@ -181,6 +178,9 @@ function computeDefaults(
       formData,
       includeUndefinedValues
     );
+  } else if ("default" in schema) {
+    // Use schema defaults for this node.
+    defaults = schema.default;
   } else if ("dependencies" in schema) {
     const resolvedSchema = resolveDependencies(schema, rootSchema, formData);
     return computeDefaults(
